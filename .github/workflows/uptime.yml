@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: '*/10 * * * *'
   workflow_dispatch:
+    inputs:
+      test:
+        description: 'أرسل رسالة تجربة على تيليجرام'
+        type: boolean
+        default: true
 permissions:
   actions: read
 jobs:
@@ -19,6 +24,7 @@ jobs:
           GH: ${{ github.token }}
           REPO: ${{ github.repository }}
           RUN: ${{ github.run_id }}
+          TEST: ${{ inputs.test }}
         run: |
           send() { [ -n "$TG" ] && curl -s -m 15 -o /dev/null "https://api.telegram.org/bot$TG/sendMessage" --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$1"; }
           bad=""
@@ -34,4 +40,5 @@ jobs:
             exit 1
           fi
           [ "$prev" = failure ] && send "🟢 السيرفر رجع يرد من برّا ✅"
+          [ "$TEST" = true ] && send "✅ تجربة: مراقبة GitHub من برّا السيرفر شغّالة. البرنامجين يردّون، وبيوصلك تنبيه لو وقف السيرفر كله."
           echo ok
