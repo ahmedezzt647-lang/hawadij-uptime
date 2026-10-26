@@ -1,4 +1,4 @@
-# مراقبة من برّا السيرفر: كل 10 دقايق يفحص البرنامجين. لو ما ردّوا 3 مرات ورا بعض يرسل 🔴 على تيليجرام، ولما يرجعون 🟢. مرة وحدة لكل تغيّر.
+# مراقبة من برّا السيرفر: كل 10 دقايق يفحص البرامج الثلاثة (المبيعات، الحركة، التحصيل). لو ما ردّوا 3 مرات ورا بعض يرسل 🔴 على تيليجرام، ولما يرجعون 🟢. مرة وحدة لكل تغيّر.
 # الأسرار (Settings ← Secrets ← Actions): TELEGRAM_BOT_TOKEN و TELEGRAM_CHAT_ID. ما تنطبع في السجل.
 name: uptime
 on:
@@ -28,7 +28,7 @@ jobs:
         run: |
           send() { [ -n "$TG" ] && curl -s -m 15 -o /dev/null "https://api.telegram.org/bot$TG/sendMessage" --data-urlencode "chat_id=$CHAT" --data-urlencode "text=$1"; }
           bad=""
-          for u in https://hawadijcars.cloud/healthz https://fleet.hawadijcars.cloud/healthz; do
+          for u in https://hawadijcars.cloud/healthz https://fleet.hawadijcars.cloud/healthz https://collect.hawadijcars.cloud/healthz; do
             ok=0
             for i in 1 2 3; do c=$(curl -s -m 20 -o /dev/null -w '%{http_code}' "$u"); [ "$c" = 200 ] && { ok=1; break; }; sleep 20; done
             [ $ok = 1 ] || bad+="• $u ($c)"$'\n'
